@@ -6,6 +6,15 @@ import javafx.beans.property.SimpleStringProperty;
  * Created by HP on 22.04.2017.
  */
 public class Request {
+    public static int getCount() {
+        return count;
+    }
+
+    public static void setCount(int count) {
+        Request.count = count;
+    }
+
+    private static int count;
     private SimpleStringProperty id = new SimpleStringProperty("");
     private SimpleStringProperty time = new SimpleStringProperty("");
     private SimpleStringProperty status = new SimpleStringProperty("");

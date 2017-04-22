@@ -7,4 +7,5 @@ import objects.Request;
  */
 public interface RequestQueue {
     void add(Request request);
+    void delete(Request request);
 }
