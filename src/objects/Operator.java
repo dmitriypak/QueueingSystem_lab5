@@ -9,8 +9,7 @@ import javafx.collections.ObservableList;
  */
 public class Operator implements Runnable  {
     Thread thread;
-  //  private OperatorTask timerTask;
-  //  private Request request;
+
     private ObservableList<Request> requestQueueObservableList = FXCollections.observableArrayList();
     private int operatorID;
 
@@ -27,33 +26,57 @@ public class Operator implements Runnable  {
         return requestQueueObservableList;
     }
 
+
     public void addListener(){
         ListChangeListener listChangeListener = new ListChangeListener<Request>() {
             @Override
             public void onChanged(Change<? extends Request> c) {
                 if(requestQueueObservableList.size()>0){
-//                    requestQueueObservableList.get(requestQueueObservableList.size()-1).setTime("10000");
-//                    requestQueueObservableList.get(requestQueueObservableList.size()-1).setStatus("в обработке");
-//                    try {
-//                        Thread.currentThread().sleep(10);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
+                    requestQueueObservableList.get(requestQueueObservableList.size()-1).setTime("10000");
+                    requestQueueObservableList.get(requestQueueObservableList.size()-1).setStatus("обработан");
+                    notifyAll();
                 }
             }
         };
         requestQueueObservableList.addListener(listChangeListener);
     }
-    @Override
-    public void run() {
-        addListener();
 
-        if (requestQueueObservableList.size() > 0) {
+    public synchronized void doNotifyRequest(){
+        if (requestQueueObservableList.size()>0){
+            //requestQueueObservableList.remove(requestQueueObservableList.size()-1);
+           notifyAll();
+        }
+        else{
             try {
-                Thread.sleep(Integer.parseInt("10000"));
+                wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+
+
+    }
+
+
+    public synchronized void doProcessRequest(){
+        if(requestQueueObservableList.size()==0){
+            try {
+                System.out.println("wait");
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            System.out.println(Thread.currentThread().getName());
+        }
+    }
+
+    @Override
+    public void run() {
+        addListener();
+        while(true) {
+            doProcessRequest();
         }
 
     }

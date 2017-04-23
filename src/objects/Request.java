@@ -26,7 +26,7 @@ public class Request {
     }
 
     public void setStatus(String status){
-        this.id.set(status);
+        this.status.set(status);
     }
     public void setTime(String time){
         this.time.set(time);

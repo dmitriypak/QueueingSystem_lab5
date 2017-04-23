@@ -21,7 +21,7 @@ public class CollectionRequestQueue implements RequestQueue, Runnable{
     private static ObservableList<Request> requestList = FXCollections.observableArrayList();
 
     @Override
-    public void add(Request request) {
+    public synchronized void add(Request request) {
         requestList.add(request);
     }
 
