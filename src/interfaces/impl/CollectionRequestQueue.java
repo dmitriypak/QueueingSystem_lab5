@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static controllers.Controller.operatorArrayList;
+
 
 /**
  * Created by HP on 22.04.2017.
@@ -33,14 +35,22 @@ public class CollectionRequestQueue implements RequestQueue, Runnable{
         ListChangeListener listChangeListener = new ListChangeListener<Request>() {
             @Override
             public void onChanged(Change<? extends Request> c) {
-                System.out.println(requestList.size());
+                for(int i = 0;i<operatorArrayList.size();i++){
+                    System.out.println(operatorArrayList.get(i).getOperatorID());
+                   // if(operatorArrayList.get(i).getRequestQueueObservableList().size()==0){
+                        if(requestList.size()>0){
+                            Request request = new Request(requestList.get(requestList.size()-1).getId(),"1000","в обработке");
+                            operatorArrayList.get(i).getRequestQueueObservableList().add(request);
+                           // System.out.println(requestList.get(requestList.size()-1).getId());
+                        }
+                  //  }
+                }
             }
         };
         requestList.addListener(listChangeListener);
     }
 
     public void deleteAll(){
-     //   requestList.removeAll();
         requestList.clear();
     }
 
@@ -52,13 +62,13 @@ public class CollectionRequestQueue implements RequestQueue, Runnable{
     public void run() {
         int id = 0;
         int period = 0;
-
         while (id<Request.getCount()){
             period = RandomRange.getRandomInRange(8,12);
             Date date = new Date();
             SimpleDateFormat sf = new SimpleDateFormat("HH:mm:ss:SSS", Locale.ENGLISH);
             Request req = new Request(Integer.toString(id),sf.format(date)+"/"+Integer.toString(period),"новая");
             requestList.add(req);
+
             id++;
             try {
                 Thread.sleep(period);
@@ -66,7 +76,6 @@ public class CollectionRequestQueue implements RequestQueue, Runnable{
                 e.printStackTrace();
             }
         }
-        return;
     }
 }
 

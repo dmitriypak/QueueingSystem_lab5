@@ -35,10 +35,12 @@ public class Request {
         return id.get();
     }
 
+    public SimpleStringProperty idProperty(){
+        return id;
+    }
     public SimpleStringProperty statusProperty(){
         return status;
     }
-
     public SimpleStringProperty timeProperty(){
         return time;
     }

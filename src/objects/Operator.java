@@ -1,55 +1,61 @@
 package objects;
 
-import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-
-import java.util.Timer;
 
 /**
  * Created by HP on 22.04.2017.
  */
 public class Operator implements Runnable  {
     Thread thread;
-    private OperatorTask timerTask;
-    private Request request;
-    private ObservableList<Request> requestQueueObservableList;
+  //  private OperatorTask timerTask;
+  //  private Request request;
+    private ObservableList<Request> requestQueueObservableList = FXCollections.observableArrayList();
     private int operatorID;
-    private SimpleStringProperty serviceTime = new SimpleStringProperty("");
-    private SimpleStringProperty status = new SimpleStringProperty("");
-
 
     public Operator(int operatorID){
-
-        thread = new Thread(this, "operator");
+        thread = new Thread(this, "operator" + operatorID);
         this.operatorID = operatorID;
-//        this.serviceTime = new SimpleStringProperty(serviceTime);
-//        this.status = new SimpleStringProperty("в обработке");
         thread.start();
     }
 
-//    public ObservableList<Request> getRequestQueue(){
-//        return requestQueue;
-//    }
+    public int getOperatorID(){
+        return operatorID;
+    }
+    public ObservableList<Request> getRequestQueueObservableList(){
+        return requestQueueObservableList;
+    }
 
+    public void addListener(){
+        ListChangeListener listChangeListener = new ListChangeListener<Request>() {
+            @Override
+            public void onChanged(Change<? extends Request> c) {
+                if(requestQueueObservableList.size()>0){
+//                    requestQueueObservableList.get(requestQueueObservableList.size()-1).setTime("10000");
+//                    requestQueueObservableList.get(requestQueueObservableList.size()-1).setStatus("в обработке");
+//                    try {
+//                        Thread.currentThread().sleep(10);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+                }
+            }
+        };
+        requestQueueObservableList.addListener(listChangeListener);
+    }
     @Override
     public void run() {
-        timerTask = new OperatorTask(operatorID);
-        Timer timer = new Timer(true);
-        timer.scheduleAtFixedRate(timerTask,0,10);
-//        if (CollectionRequestQueue.getRequestQueue().size() > 0) {
-//            request = CollectionRequestQueue.getRequestQueue().getLast();
-//            requestQueue.add(request);
-//            try {
-//                Thread.sleep(Integer.parseInt(serviceTime.getValue()));
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        addListener();
+
+        if (requestQueueObservableList.size() > 0) {
+            try {
+                Thread.sleep(Integer.parseInt("10000"));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
-//
-//    @Override
-//    public void add(Request request) {
-//        requestQueue.add(request);
-//    }
+
 }
