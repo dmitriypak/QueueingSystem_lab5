@@ -18,7 +18,7 @@ import static controllers.Controller.operatorArrayList;
  * Created by HP on 22.04.2017.
  */
 public class CollectionRequestQueue implements RequestQueue, Runnable{
-    private static ObservableList<Request> requestList = FXCollections.observableArrayList();
+    public static ObservableList<Request> requestList = FXCollections.observableArrayList();
 
     @Override
     public void add(Request request) {
@@ -30,20 +30,17 @@ public class CollectionRequestQueue implements RequestQueue, Runnable{
 
     }
 
-
     public void addListener() {
         ListChangeListener listChangeListener = new ListChangeListener<Request>() {
             @Override
             public void onChanged(Change<? extends Request> c) {
+                int index = requestList.size()-1;
                 for(int i = 0;i<operatorArrayList.size();i++){
-                    System.out.println(operatorArrayList.get(i).getOperatorID());
-                   // if(operatorArrayList.get(i).getRequestQueueObservableList().size()==0){
-                        if(requestList.size()>0){
-                            Request request = new Request(requestList.get(requestList.size()-1).getId(),"1000","в обработке");
-                            operatorArrayList.get(i).getRequestQueueObservableList().add(request);
-                           // System.out.println(requestList.get(requestList.size()-1).getId());
-                        }
-                  //  }
+                    if(operatorArrayList.get(i).getFree()==1){
+                        Request request = new Request(requestList.get(index).getId(),"","в обработке",Integer.toString(i));
+                        operatorArrayList.get(i).getRequestQueueObservableList().add(request);
+                        break;
+                    }
                 }
             }
         };
@@ -63,7 +60,7 @@ public class CollectionRequestQueue implements RequestQueue, Runnable{
         int id = 0;
         int period = 0;
         while (id<Request.getCount()){
-            period = RandomRange.getRandomInRange(8,12);
+            period = RandomRange.getRandomInRange(8,12)*10;
             Date date = new Date();
             SimpleDateFormat sf = new SimpleDateFormat("HH:mm:ss:SSS", Locale.ENGLISH);
             Request req = new Request(Integer.toString(id),sf.format(date)+"/"+Integer.toString(period),"новая");

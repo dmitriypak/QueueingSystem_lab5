@@ -4,10 +4,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="821.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="821.0" prefWidth="1271.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Controller">
    <children>
       <TableView fx:id="tableRequest" layoutX="28.0" layoutY="56.0" prefHeight="452.0" prefWidth="348.0" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="65.0">
         <columns>
@@ -17,21 +18,21 @@
         </columns>
       </TableView>
       <Button fx:id="btnStart" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#fillData" prefHeight="32.0" prefWidth="32.0" stylesheets="@../css/style.css" />
-      <TableView fx:id="tableOperator1" layoutX="384.0" layoutY="65.0" prefHeight="235.0" prefWidth="309.0">
+      <TableView fx:id="tableOperator1" layoutX="384.0" layoutY="65.0" prefHeight="235.0" prefWidth="303.0">
          <columns>
             <TableColumn fx:id="colIdOperator1" prefWidth="75.0" text="ID заявки" />
             <TableColumn fx:id="colTimeOperator1" prefWidth="140.0" text="Время обработки, мс" />
             <TableColumn fx:id="colStatusOperator1" prefWidth="90.0" text="Статус" />
          </columns>
       </TableView>
-      <TableView fx:id="tableOperator2" layoutX="384.0" layoutY="319.0" prefHeight="235.0" prefWidth="309.0">
+      <TableView fx:id="tableOperator2" layoutX="384.0" layoutY="319.0" prefHeight="235.0" prefWidth="303.0">
          <columns>
             <TableColumn fx:id="colIdOperator2" prefWidth="75.0" text="ID заявки" />
             <TableColumn fx:id="colTimeOperator2" prefWidth="140.0" text="Время обработки, мс" />
             <TableColumn fx:id="colStatusOperator2" prefWidth="90.0" text="Статус" />
          </columns>
       </TableView>
-      <TableView fx:id="tableOperator3" layoutX="384.0" layoutY="574.0" prefHeight="235.0" prefWidth="309.0">
+      <TableView fx:id="tableOperator3" layoutX="384.0" layoutY="574.0" prefHeight="235.0" prefWidth="303.0">
          <columns>
             <TableColumn fx:id="colIdOperator3" prefWidth="75.0" text="ID заявки" />
             <TableColumn fx:id="colTimeOperator3" prefWidth="140.0" text="Время обработки, мс" />
@@ -40,5 +41,18 @@
       </TableView>
       <TextField fx:id="txtCountRequest" layoutX="158.0" layoutY="20.0" prefHeight="25.0" prefWidth="40.0" text="300" />
       <Label layoutX="64.0" layoutY="24.0" text="Кол-во заявок:" />
+      <TableView fx:id="tableDataStorage1" layoutX="713.0" layoutY="65.0" prefHeight="486.0" prefWidth="309.0">
+        <columns>
+          <TableColumn fx:id="colIDrequestDevice1" prefWidth="75.0" text="ID заявки" />
+          <TableColumn fx:id="colIDoperatorDevice1" prefWidth="75.0" text="Оператор" />
+        </columns>
+      </TableView>
+      <TableView fx:id="tableDataStorage2" layoutX="713.0" layoutY="574.0" prefHeight="235.0" prefWidth="309.0">
+        <columns>
+          <TableColumn fx:id="colIDrequestDevice2" prefWidth="75.0" text="ID заявки" />
+          <TableColumn fx:id="colIDoperatorDevice2" prefWidth="75.0" text="Оператор" />
+        </columns>
+      </TableView>
+      <TextArea fx:id="textArea" layoutX="1034.0" layoutY="65.0" prefHeight="200.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

@@ -19,14 +19,36 @@ public class Request {
     private SimpleStringProperty time = new SimpleStringProperty("");
     private SimpleStringProperty status = new SimpleStringProperty("");
 
+    public String getOperatorID() {
+        return operatorID.get();
+    }
+
+    public void setOperatorID(String operatorID) {
+        this.operatorID.set(operatorID);
+    }
+
+    public String getStatus() {
+        return status.get();
+    }
+
+    private SimpleStringProperty operatorID = new SimpleStringProperty("");
+
     public Request(String id, String time, String status){
         this.id = new SimpleStringProperty(id);
         this.time = new SimpleStringProperty(time);
         this.status = new SimpleStringProperty(status);
     }
 
+    public Request(String id, String time, String status, String operatorID){
+        this.id = new SimpleStringProperty(id);
+        this.time = new SimpleStringProperty(time);
+        this.status = new SimpleStringProperty(status);
+        this.operatorID = new SimpleStringProperty(operatorID);
+    }
+
+
     public void setStatus(String status){
-        this.id.set(status);
+        this.status.set(status);
     }
     public void setTime(String time){
         this.time.set(time);
@@ -43,5 +65,8 @@ public class Request {
     }
     public SimpleStringProperty timeProperty(){
         return time;
+    }
+    public SimpleStringProperty operatorIDProperty() {
+        return operatorID;
     }
 }

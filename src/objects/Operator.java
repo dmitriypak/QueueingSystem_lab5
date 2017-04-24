@@ -9,21 +9,39 @@ import javafx.collections.ObservableList;
  */
 public class Operator implements Runnable  {
     Thread thread;
-  //  private OperatorTask timerTask;
-  //  private Request request;
+
     private ObservableList<Request> requestQueueObservableList = FXCollections.observableArrayList();
     private int operatorID;
+    private int free;
+    private int deviceID;
+
+    public int getDeviceID() {
+        return deviceID;
+    }
+
+    public void setDeviceID(int deviceID) {
+        this.deviceID = deviceID;
+    }
+
+    public synchronized int getFree() {
+        return free;
+    }
+
+    public synchronized void setFree(int free) {
+        this.free = free;
+    }
 
     public Operator(int operatorID){
         thread = new Thread(this, "operator" + operatorID);
         this.operatorID = operatorID;
         thread.start();
+        this.free = 1;
     }
 
     public int getOperatorID(){
         return operatorID;
     }
-    public ObservableList<Request> getRequestQueueObservableList(){
+    public synchronized ObservableList<Request> getRequestQueueObservableList(){
         return requestQueueObservableList;
     }
 
@@ -48,13 +66,17 @@ public class Operator implements Runnable  {
     public void run() {
         addListener();
 
-        if (requestQueueObservableList.size() > 0) {
-            try {
-                Thread.sleep(Integer.parseInt("10000"));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        OperatorTask operatorTask = new OperatorTask(operatorID);
+//        Timer operatorTimer = new Timer(true);
+//        operatorTimer.scheduleAtFixedRate(operatorTask,0,10);
+
+//        if(operatorID==1 || operatorID==3){
+//            Device device = new Device();
+//            DeviceTask deviceTask = new DeviceTask();
+//            Timer deviceTimer = new Timer(true);
+//            deviceTimer.scheduleAtFixedRate(deviceTask,0,10);
+//        }
+
 
     }
 
