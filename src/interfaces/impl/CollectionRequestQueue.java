@@ -41,6 +41,10 @@ public class CollectionRequestQueue implements RequestQueue, Runnable{
                         operatorArrayList.get(i).getRequestQueueObservableList().add(request);
                         break;
                     }
+                    else{
+                        requestList.get(index).setStatus("не обработана");
+                    }
+
                 }
             }
         };

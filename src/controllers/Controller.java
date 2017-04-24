@@ -4,6 +4,7 @@ import interfaces.impl.CollectionRequestQueue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -12,6 +13,7 @@ import objects.*;
 
 import java.util.LinkedList;
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class Controller {
 
@@ -62,6 +64,14 @@ public class Controller {
     private TableColumn colIDoperatorDevice1;
     @FXML
     private TableColumn colIDoperatorDevice2;
+    @FXML
+    private ProgressBar progressBar1;
+    @FXML
+    private ProgressBar progressBar2;
+    @FXML
+    private TextField txtDeviceCapacity1;
+    @FXML
+    private TextField txtDeviceCapacity2;
 
 
     private LinkedList<Request> requestQueue = new LinkedList<Request>();
@@ -88,27 +98,44 @@ public class Controller {
         colStatusOperator3.setCellValueFactory(new PropertyValueFactory<Request,String>("status"));
 
         colIDrequestDevice1.setCellValueFactory(new PropertyValueFactory<Request,String>("id"));
-        colIDrequestDevice1.setCellValueFactory(new PropertyValueFactory<Request,String>("operatorID"));
+        colIDoperatorDevice1.setCellValueFactory(new PropertyValueFactory<Request,String>("operatorID"));
 
         colIDrequestDevice2.setCellValueFactory(new PropertyValueFactory<Request,String>("id"));
-        colIDrequestDevice2.setCellValueFactory(new PropertyValueFactory<Request,String>("operatorID"));
+        colIDoperatorDevice2.setCellValueFactory(new PropertyValueFactory<Request,String>("operatorID"));
 
         requestQueueImpl.addListener();
         createOperators(3);
         createDevices(2);
+        createProgressBar(2);
+    }
+
+    private void createProgressBar(int i) {
+        for(int j = 0;j<i;j++) {
+            TimerTask timerTask = new ProgressBarThread(deviceArrayList.get(j));
+            Timer timer = new Timer(true);
+            timer.scheduleAtFixedRate(timerTask, 0, 10);
+        }
+    }
+
+    private synchronized void setprogressbar1(double i) {
+        progressBar1.setProgress( i);
+    }
+
+
+    private synchronized void setprogressbar2(double i) {
+        progressBar2.setProgress(i);
     }
 
     private void createDevices(int count) {
         for(int i=0;i<count;i++){
-            if(i<2){
-                operatorArrayList.get(i).setDeviceID(0);
+            if(i==0){
+                Device device = new Device(i,Integer.parseInt(txtDeviceCapacity1.getText()));
+                deviceArrayList.add(device);
             }
             else {
-                operatorArrayList.get(i).setDeviceID(1);
+                Device device = new Device(i,Integer.parseInt(txtDeviceCapacity2.getText()));
+                deviceArrayList.add(device);
             }
-
-            Device device = new Device(i);
-            deviceArrayList.add(device);
 
             DeviceTask deviceTask = new DeviceTask();
             Timer deviceTimer = new Timer(true);
@@ -136,10 +163,44 @@ public class Controller {
         tableOperator2.setItems(operatorArrayList.get(1).getRequestQueueObservableList());
         tableOperator3.setItems(operatorArrayList.get(2).getRequestQueueObservableList());
 
-        tableDataStorage1.setItems(deviceArrayList.get(0).getRequestQueueObservableList());
-        tableDataStorage2.setItems(deviceArrayList.get(1).getRequestQueueObservableList());
+        tableDataStorage1.setItems(deviceArrayList.get(0).getRequestDeviceQueueObservableList());
+        tableDataStorage2.setItems(deviceArrayList.get(1).getRequestDeviceQueueObservableList());
 
     }
+
+    public class ProgressBarThread extends TimerTask {
+        Device device;
+        public ProgressBarThread(Device device){
+            this.device = device;
+        }
+        private double getCapacityLoad(){
+            double capacityload=0;
+            int x = device.getRequestDeviceQueueObservableList().size();
+            if(x<=device.getCapacity()){
+                capacityload = (double) x/device.getCapacity();
+            }
+            else{
+                capacityload = 1;
+            }
+            return capacityload;
+        }
+
+
+        @Override
+        public void run() {
+            if(device.getRequestDeviceQueueObservableList().size()>0){
+                if(device.getID()==0){
+                    setprogressbar1(getCapacityLoad());
+                }
+                else{
+                    setprogressbar2(getCapacityLoad());
+                }
+
+
+            }
+        }
+    }
+
 
 }
 

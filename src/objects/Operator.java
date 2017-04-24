@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
+import static controllers.Controller.deviceArrayList;
+
 /**
  * Created by HP on 22.04.2017.
  */
@@ -11,17 +13,26 @@ public class Operator implements Runnable  {
     Thread thread;
 
     private ObservableList<Request> requestQueueObservableList = FXCollections.observableArrayList();
-    private int operatorID;
+//    private int operatorID;
     private int free;
-    private int deviceID;
+//    private int deviceID;
 
-    public int getDeviceID() {
-        return deviceID;
-    }
+//    public int getDeviceID() {
+//        return deviceID;
+//    }
+//
+//    public void setDeviceID(int deviceID) {
+//        this.deviceID = deviceID;
+//    }
+    //    private Device device;
 
-    public void setDeviceID(int deviceID) {
-        this.deviceID = deviceID;
-    }
+//    public Device getDevice() {
+//        return device;
+//    }
+//
+//    public void setDevice(Device device) {
+//        this.device = device;
+//    }
 
     public synchronized int getFree() {
         return free;
@@ -33,14 +44,14 @@ public class Operator implements Runnable  {
 
     public Operator(int operatorID){
         thread = new Thread(this, "operator" + operatorID);
-        this.operatorID = operatorID;
+       // this.operatorID = operatorID;
         thread.start();
         this.free = 1;
     }
 
-    public int getOperatorID(){
-        return operatorID;
-    }
+ //   public int getOperatorID(){
+//        return operatorID;
+//    }
     public synchronized ObservableList<Request> getRequestQueueObservableList(){
         return requestQueueObservableList;
     }
@@ -49,14 +60,15 @@ public class Operator implements Runnable  {
         ListChangeListener listChangeListener = new ListChangeListener<Request>() {
             @Override
             public void onChanged(Change<? extends Request> c) {
-                if(requestQueueObservableList.size()>0){
-//                    requestQueueObservableList.get(requestQueueObservableList.size()-1).setTime("10000");
-//                    requestQueueObservableList.get(requestQueueObservableList.size()-1).setStatus("в обработке");
-//                    try {
-//                        Thread.currentThread().sleep(10);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
+               // System.out.println(requestQueueObservableList.get(requestQueueObservableList.size()-1).getId());
+                int index = requestQueueObservableList.size() - 1;
+                int operatorID = Integer.parseInt(requestQueueObservableList.get(index).getOperatorID());
+                Request request = new Request(requestQueueObservableList.get(index).getId(),"","в обработке",Integer.toString(operatorID));
+                if(operatorID==0||operatorID==1){
+                    deviceArrayList.get(0).getRequestDeviceQueueObservableList().add(request);
+                }
+                else{
+                    deviceArrayList.get(1).getRequestDeviceQueueObservableList().add(request);
                 }
             }
         };
@@ -65,19 +77,6 @@ public class Operator implements Runnable  {
     @Override
     public void run() {
         addListener();
-
-//        OperatorTask operatorTask = new OperatorTask(operatorID);
-//        Timer operatorTimer = new Timer(true);
-//        operatorTimer.scheduleAtFixedRate(operatorTask,0,10);
-
-//        if(operatorID==1 || operatorID==3){
-//            Device device = new Device();
-//            DeviceTask deviceTask = new DeviceTask();
-//            Timer deviceTimer = new Timer(true);
-//            deviceTimer.scheduleAtFixedRate(deviceTask,0,10);
-//        }
-
-
     }
 
 }
