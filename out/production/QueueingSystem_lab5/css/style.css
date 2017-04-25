@@ -9,3 +9,38 @@
     -fx-background-size: stretch;
     -fx-background-repeat: no-repeat;
 }
+
+/*.progress-bar > .track {*/
+    /*-fx-text-box-border: forestgreen;*/
+    /*-fx-control-inner-background: palegreen;*/
+/*}*/
+
+/*.progress-bar > .track {*/
+    /*-fx-opacity: 0.7;*/
+    /*-fx-background-color: linear-gradient(to bottom right, green, red);*/
+
+/*}*/
+#colIdOperator1{
+    -fx-alignment: center;
+}
+
+#colIdOperator2{
+    -fx-alignment: center;
+}
+
+#colIdOperator2{
+    -fx-alignment: center;
+}
+
+#colIDrequestDevice1{
+    -fx-alignment: center;
+}
+#colIDrequestDevice2{
+    -fx-alignment: center;
+}
+
+.progress-bar > .bar {
+    -fx-opacity: 1;
+    -fx-background-color: linear-gradient(to bottom right, green, green);
+
+}

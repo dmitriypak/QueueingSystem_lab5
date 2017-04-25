@@ -13,27 +13,7 @@ public class Operator implements Runnable  {
     Thread thread;
 
     private ObservableList<Request> requestQueueObservableList = FXCollections.observableArrayList();
-//    private int operatorID;
     private int free;
-//    private int deviceID;
-
-//    public int getDeviceID() {
-//        return deviceID;
-//    }
-//
-//    public void setDeviceID(int deviceID) {
-//        this.deviceID = deviceID;
-//    }
-    //    private Device device;
-
-//    public Device getDevice() {
-//        return device;
-//    }
-//
-//    public void setDevice(Device device) {
-//        this.device = device;
-//    }
-
     public synchronized int getFree() {
         return free;
     }
@@ -44,14 +24,10 @@ public class Operator implements Runnable  {
 
     public Operator(int operatorID){
         thread = new Thread(this, "operator" + operatorID);
-       // this.operatorID = operatorID;
         thread.start();
         this.free = 1;
     }
 
- //   public int getOperatorID(){
-//        return operatorID;
-//    }
     public synchronized ObservableList<Request> getRequestQueueObservableList(){
         return requestQueueObservableList;
     }
@@ -60,7 +36,6 @@ public class Operator implements Runnable  {
         ListChangeListener listChangeListener = new ListChangeListener<Request>() {
             @Override
             public void onChanged(Change<? extends Request> c) {
-               // System.out.println(requestQueueObservableList.get(requestQueueObservableList.size()-1).getId());
                 int index = requestQueueObservableList.size() - 1;
                 int operatorID = Integer.parseInt(requestQueueObservableList.get(index).getOperatorID());
                 Request request = new Request(requestQueueObservableList.get(index).getId(),"","в обработке",Integer.toString(operatorID));

@@ -4,10 +4,7 @@ import interfaces.impl.CollectionRequestQueue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import objects.*;
 
@@ -72,12 +69,30 @@ public class Controller {
     private TextField txtDeviceCapacity1;
     @FXML
     private TextField txtDeviceCapacity2;
+    @FXML
+    private TableColumn colTimeDevice1;
+    @FXML
+    private TableColumn colTimeDevice2;
+    @FXML
+    private TableColumn colStatDevice1;
+    @FXML
+    private TableColumn colStatDevice2;
+    @FXML
+    private Slider slider1;
+    @FXML
+    private Slider slider2;
 
 
     private LinkedList<Request> requestQueue = new LinkedList<Request>();
     public static ObservableList<Operator> operatorArrayList = FXCollections.observableArrayList();
     public static ObservableList<Device> deviceArrayList = FXCollections.observableArrayList();
     private CollectionRequestQueue requestQueueImpl = new CollectionRequestQueue();
+    public static int serviceTime1 = 0;
+    public static int serviceTime2 = 0;
+    public static int deviceCapacity1 = 0;
+    public static int deviceCapacity2 = 0;
+    public static double capacityload1=0;
+    public static double capacityload2=0;
     @FXML
     private void initialize(){
         colId.setCellValueFactory(new PropertyValueFactory<Request,String>("id"));
@@ -99,9 +114,13 @@ public class Controller {
 
         colIDrequestDevice1.setCellValueFactory(new PropertyValueFactory<Request,String>("id"));
         colIDoperatorDevice1.setCellValueFactory(new PropertyValueFactory<Request,String>("operatorID"));
+        colTimeDevice1.setCellValueFactory(new PropertyValueFactory<Request,String>("time"));
+        colStatDevice1.setCellValueFactory(new PropertyValueFactory<Request,String>("status"));
 
         colIDrequestDevice2.setCellValueFactory(new PropertyValueFactory<Request,String>("id"));
         colIDoperatorDevice2.setCellValueFactory(new PropertyValueFactory<Request,String>("operatorID"));
+        colTimeDevice2.setCellValueFactory(new PropertyValueFactory<Request,String>("time"));
+        colStatDevice2.setCellValueFactory(new PropertyValueFactory<Request,String>("status"));
 
         requestQueueImpl.addListener();
         createOperators(3);
@@ -137,7 +156,7 @@ public class Controller {
                 deviceArrayList.add(device);
             }
 
-            DeviceTask deviceTask = new DeviceTask();
+            DeviceTask deviceTask = new DeviceTask(i);
             Timer deviceTimer = new Timer(true);
             deviceTimer.scheduleAtFixedRate(deviceTask, 0, 10);
         }
@@ -173,30 +192,41 @@ public class Controller {
         public ProgressBarThread(Device device){
             this.device = device;
         }
-        private double getCapacityLoad(){
-            double capacityload=0;
-            int x = device.getRequestDeviceQueueObservableList().size();
-            if(x<=device.getCapacity()){
-                capacityload = (double) x/device.getCapacity();
+
+        private synchronized double getCapacityLoad(){
+            double notcomplete = 0;
+            for(int i=0;i<device.getRequestDeviceQueueObservableList().size();i++){
+                if(device.getRequestDeviceQueueObservableList().get(i).getStatus()=="в обработке"){
+                    notcomplete++;
+                }
+            }
+            if(device.getID()==0){
+                capacityload1=notcomplete/device.getCapacity();
+                return capacityload1;
             }
             else{
-                capacityload = 1;
+                capacityload2=notcomplete/device.getCapacity();
+                return capacityload2;
             }
-            return capacityload;
-        }
 
+        }
 
         @Override
         public void run() {
             if(device.getRequestDeviceQueueObservableList().size()>0){
+                deviceCapacity1 = Integer.parseInt(txtDeviceCapacity1.getText());
+                deviceCapacity2 = Integer.parseInt(txtDeviceCapacity2.getText());
                 if(device.getID()==0){
+                    serviceTime1 = (int)slider1.getValue();
+                    device.setServiceTime(serviceTime1);
                     setprogressbar1(getCapacityLoad());
+
                 }
                 else{
+                    serviceTime2 = (int)slider2.getValue();
+                    device.setServiceTime(serviceTime2);
                     setprogressbar2(getCapacityLoad());
                 }
-
-
             }
         }
     }
