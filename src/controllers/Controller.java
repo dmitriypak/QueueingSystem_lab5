@@ -81,6 +81,8 @@ public class Controller {
     private Slider slider1;
     @FXML
     private Slider slider2;
+    @FXML
+    private Label labelProgress1;
 
 
     private LinkedList<Request> requestQueue = new LinkedList<Request>();
